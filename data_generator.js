@@ -39,6 +39,7 @@ var randomMessage = function(){
 
 // generate random tweets on a random schedule
 var generateRandomTweet = function(){
+  var currDate = new Date();
   var tweet = {};
   tweet.user = randomElement(users);
   tweet.message = randomMessage();
@@ -52,7 +53,7 @@ for(var i = 0; i < 10; i++){
 
 var scheduleNextTweet = function(){
   generateRandomTweet();
-  setTimeout(scheduleNextTweet, Math.random() * 1500);
+  setTimeout(scheduleNextTweet, Math.random() * 3000);
 };
 scheduleNextTweet();
 

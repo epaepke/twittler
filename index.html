@@ -1,27 +1,67 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <title> Twittler </title>
+    <link rel="stylesheet" href="style.css" />
     <script src="jquery.js"></script>
     <script src="data_generator.js"></script>
+    <script src="moment.js"></script>
   </head>
   <body>
+    <div id="banner" class="group"> Twittler </div>
+    <div id="navBar" class="group">
+    <head> Navigation Bar </head>
+      <ul>
+        <button id="all" data-name="a"> All Users</button>
+        <button data-name="douglascalhoun">douglascalhoun</button>
+        <button data-name="mracus">mracus</button>
+        <button data-name="sharksforcheap">sharksforcheap</button>
+        <button data-name="shawndrost">shawndrost</button>
+      </ul>
+      <p> Filter tweets by clicking the username buttons above </p>
+      <p> To update feed, click "All Users"</p>
+    </div>
+    <div class="group" id="tableHolder">
+      <ul>
+      </ul>
+      <footer>
+        <span id="name">Web Design by Erick Paepke </span> 
+        <span id="hack"> Tweets courtesy of Hack Reactor</span>
+        </footer>
     <script>
-
       $(document).ready(function(){
-        var $body = $('body');
-        $body.html('');
+        var refreshID = setInterval(updateTable, 200);
 
-        var index = streams.home.length - 1;
-        while(index >= 0){
-          var tweet = streams.home[index];
-          var $tweet = $('<div></div>');
-          $tweet.text('@' + tweet.user + ': ' + tweet.message);
-          $tweet.appendTo($body);
-          index -= 1;
-        }
+        /** Updates twitter feed. */
+        function updateTable() {
+          $('#tableHolder ul').empty();
+          var index = 0;
+          while (index <= streams.home.length) {
+            var tweet = streams.home[index];
+            var time = moment(tweet.created_at).fromNow();
+            var tname = tweet.user;
+            $('#tableHolder ul').prepend('<li id="outTweet" class="'+ tname +'"><div id="inTweet"><div class="name">'+ tname + '<span class="time">' + time + '</span></div><div class="tweets">' + tweet.message + '</div><div></li>');
+              index++;
+            }
+          }
+
+        /** Filter user's tweets upon clicking button. */
+        $('ul').on('click', 'button', function() {
+          $( "li" ).show();
+          clearInterval(refreshID);
+          var username = $(this).data("name");
+          $( "li" ).not( '.' + username ).hide();
+        });
+
+        /** Show tweets from all users and update feed upon clicking  
+         *  buttton. */
+        $('ul').on('click', '#all', function() {
+          clearInterval(refreshID);
+          $( "li" ).show();
+          refreshID = setInterval(updateTable, 2500);
+          });
 
       });
-
     </script>
   </body>
 </html>
